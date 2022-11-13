@@ -11,7 +11,7 @@ exports.index = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      res.json({ items: items, title: 'Items' });
+      res.json(items);
     });
 }
 
