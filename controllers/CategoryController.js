@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 
 exports.index = (req, res, next) => {
   Category.find()
+    .sort([['name', 'ascending']])
     .exec((err, categories) => {
       if (err) {
         return next(err);
