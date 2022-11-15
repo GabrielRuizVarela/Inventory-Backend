@@ -5,11 +5,26 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const itemsRouter = require('./routes/items');
 const categoriesRouter = require('./routes/categories');
 var app = express();
+
+
+var cors = require('cors')
+const corsOptions = {
+  origin: true,
+  credentials: true,
+}
+app.options('*', cors(corsOptions)); // preflight OPTIONS; put before other routes
+app.listen(80, function () {
+  console.log('CORS-enabled web server listening on port 80');
+});
+
+
+
 // db
 const DBkey = process.env.DB_URI
 const mongoDB = process.env.MONGODB_URI || DBkey;
