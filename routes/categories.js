@@ -9,6 +9,6 @@ router.post('/create', CategoryController.create);
 // router.get('/:id/edit', CategoryController.edit);
 // router.get('/:id', CategoryController.show);
 router.post('/:id/edit', CategoryController.update);
-router.post('/:id/delete', CategoryController.destroy);
+router.delete('/:id/delete', CategoryController.destroy);
 
 module.exports = router;

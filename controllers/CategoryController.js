@@ -15,23 +15,27 @@ exports.index = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-  // check if category already exists
+  res.header('Access-Control-Allow-Origin', '*');
   Category.findOne({ 'name': req.body.name })
     .exec((err, found_category) => {
       if (err) {
+        console.log(err)
         return next(err);
       }
       if (found_category) {
+        res.status(422);
         res.json({ message: 'Category already exists' });
       } else {
         const category = new Category({
-          name: req.body.name
+          name: req.body.name,
+          description: req.body.description
         });
         category.save((err) => {
           if (err) {
             return next(err);
           }
           res.json(category);
+          res.status(200);
         });
       }
     });
@@ -47,10 +51,25 @@ exports.update = (req, res, next) => {
 }
 
 exports.destroy = (req, res, next) => {
-  Category.findByIdAndRemove(req.params.id, (err) => {
-    if (err) {
-      return next(err);
+  // if category has items, do not delete
+  Item.find({ 'category': req.params.id })
+    .exec((err, items) => {
+      if (err) {
+        return next(err);
+      }
+      if (items.length > 0) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.status(422);
+        res.json({ message: 'Category is not empty' });
+      } else {
+        Category.findByIdAndRemove(req.params.id, (err) => {
+          if (err) {
+            return next(err);
+          }
+          res.header('Access-Control-Allow-Origin', '*');
+          res.json({ message: 'Category deleted' });
+        });
+      }
     }
-    res.json({ message: 'Category deleted' });
-  });
+    );
 }
