@@ -10,8 +10,14 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const itemsRouter = require('./routes/items');
 const categoriesRouter = require('./routes/categories');
+
+const compression = require('compression');
+const helmet = require('helmet');
+
 var app = express();
 
+app.use(helmet());
+app.use(compression());
 
 var cors = require('cors')
 const corsOptions = {
