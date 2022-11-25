@@ -4,6 +4,7 @@ const async = require('async');
 const { body, validationResult } = require('express-validator');
 
 exports.index = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   Category.find()
     .sort([['name', 'ascending']])
     .exec((err, categories) => {
@@ -42,6 +43,7 @@ exports.create = (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   Category.findByIdAndUpdate(req.params.id, { name: req.body.name }, {}, (err, category) => {
     if (err) {
       return next(err);
@@ -51,6 +53,7 @@ exports.update = (req, res, next) => {
 }
 
 exports.destroy = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   // if category has items, do not delete
   Item.find({ 'category': req.params.id })
     .exec((err, items) => {
@@ -58,7 +61,6 @@ exports.destroy = (req, res, next) => {
         return next(err);
       }
       if (items.length > 0) {
-        res.header('Access-Control-Allow-Origin', '*');
         res.status(422);
         res.json({ message: 'Category is not empty' });
       } else {
@@ -66,7 +68,6 @@ exports.destroy = (req, res, next) => {
           if (err) {
             return next(err);
           }
-          res.header('Access-Control-Allow-Origin', '*');
           res.json({ message: 'Category deleted' });
         });
       }

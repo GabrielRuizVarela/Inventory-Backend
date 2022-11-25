@@ -11,6 +11,7 @@ exports.index = (req, res, next) => {
       if (err) {
         return next(err);
       }
+      res.header('Access-Control-Allow-Origin', '*');
       res.json(items);
     });
 }
@@ -20,6 +21,7 @@ exports.create = (req, res, next) => {
     if (err) {
       return next(err);
     }
+    res.header('Access-Control-Allow-Origin', '*');
     res.json({ title: 'Create Item', categories: categories });
   });
 }
@@ -32,6 +34,7 @@ exports.store = [
   body('category', 'Category must not be empty.').isLength({ min: 1 }).trim(),
   body('img_url', 'URL must not be empty.').isLength({ min: 1 }).trim(),
   (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
     console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -50,7 +53,6 @@ exports.store = [
       if (err) {
         return next(err);
       }
-      res.header('Access-Control-Allow-Origin', '*');
       res.json(item);
     });
   }
@@ -68,6 +70,7 @@ exports.show = (req, res, next) => {
 }
 
 exports.edit = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   console.log(req.params.id)
   async.parallel({
     item: (callback) => {
@@ -92,6 +95,7 @@ exports.update = [
   body('category', 'Category must not be empty.').isLength({ min: 1 }).trim(),
   body('img_url', 'URL must not be empty.').isLength({ min: 1 }).trim(),
   (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
@@ -119,6 +123,7 @@ exports.update = [
 ]
 
 exports.destroy = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   Item.findByIdAndRemove(req.params.id, (err) => {
     if (err) {
       return next(err);
