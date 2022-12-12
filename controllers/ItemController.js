@@ -71,11 +71,11 @@ exports.update = [
   body('category', 'Category must not be empty.').isLength({ min: 1 }).trim(),
   body('img_url', 'URL must not be empty.').isLength({ min: 1 }).trim(),
   (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
+    console.log(req.body)
     const item = new Item({
       name: req.body.name,
       stock: req.body.stock,
@@ -85,13 +85,11 @@ exports.update = [
       img_url: req.body.img_url,
       _id: req.params.id
     });
-    console.log(item.category)
     Category.findById(item.category).then(res => console.log(res))
     Item.findByIdAndUpdate(req.params.id, item, {}, (err, theitem) => {
       if (err) {
         return next(err);
       }
-      res.header('Access-Control-Allow-Origin', '*');
       res.json(theitem);
     }
     );
