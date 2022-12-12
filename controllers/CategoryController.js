@@ -4,14 +4,14 @@ const async = require('async');
 const { body, validationResult } = require('express-validator');
 
 exports.index = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', '*');
   Category.find()
     .sort([['name', 'ascending']])
     .exec((err, categories) => {
       if (err) {
         return next(err);
       }
-      res.json(categories);
+      res.send(categories);
     });
 }
 

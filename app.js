@@ -4,32 +4,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const itemsRouter = require('./routes/items');
-const categoriesRouter = require('./routes/categories');
-
+var bodyParser = require('body-parser');
 const compression = require('compression');
 const helmet = require('helmet');
 
 var app = express();
-
-app.use(helmet());
-app.use(compression());
-
-var cors = require('cors')
-const corsOptions = {
-  origin: true,
-  credentials: true,
-}
-app.options('*', cors(corsOptions)); // preflight OPTIONS; put before other routes
-app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80');
-});
-
-
 
 // db
 const DBkey = process.env.DB_URI
@@ -43,10 +22,31 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+var cors = require('cors')
+const corsOptions = {
+  origin: true,
+  credentials: false,
+
+}
+// app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(helmet());
+app.use(compression());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
+app.use(cors({ origin: '*', credentials: true }));
+app.options('*', cors(corsOptions)); // preflight OPTIONS; put before other routes
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+const itemsRouter = require('./routes/items');
+const categoriesRouter = require('./routes/categories');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -69,4 +69,7 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+app.listen(8080, function () {
+  console.log('CORS-enabled web server listening on port 8080');
+});
 module.exports = app;

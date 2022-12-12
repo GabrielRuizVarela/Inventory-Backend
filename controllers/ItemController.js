@@ -3,7 +3,6 @@ const async = require('async');
 
 const { body, validationResult } = require('express-validator');
 const Category = require('../models/category');
-
 exports.index = (req, res, next) => {
   Item.find()
     .populate('category')
@@ -11,19 +10,8 @@ exports.index = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      res.header('Access-Control-Allow-Origin', '*');
-      res.json(items);
+      res.send(items);
     });
-}
-
-exports.create = (req, res, next) => {
-  Category.find({}, 'name').sort({ name: 'asc' }).exec((err, categories) => {
-    if (err) {
-      return next(err);
-    }
-    res.header('Access-Control-Allow-Origin', '*');
-    res.json({ title: 'Create Item', categories: categories });
-  });
 }
 
 exports.store = [
@@ -34,7 +22,6 @@ exports.store = [
   body('category', 'Category must not be empty.').isLength({ min: 1 }).trim(),
   body('img_url', 'URL must not be empty.').isLength({ min: 1 }).trim(),
   (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
     console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -57,17 +44,6 @@ exports.store = [
     });
   }
 ]
-
-exports.show = (req, res, next) => {
-  Item.findById(req.params.id)
-    .populate('category')
-    .exec((err, item) => {
-      if (err) {
-        return next(err);
-      }
-      res.json(item);
-    });
-}
 
 exports.edit = (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
