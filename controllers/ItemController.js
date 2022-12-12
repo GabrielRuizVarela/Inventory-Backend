@@ -46,7 +46,6 @@ exports.store = [
 ]
 
 exports.edit = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   console.log(req.params.id)
   async.parallel({
     item: (callback) => {
@@ -97,12 +96,10 @@ exports.update = [
 ]
 
 exports.destroy = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   Item.findByIdAndRemove(req.params.id, (err) => {
     if (err) {
       return next(err);
     }
-    res.header('Access-Control-Allow-Origin', '*');
     res.json({ message: 'Item deleted successfully!' });
   });
 }

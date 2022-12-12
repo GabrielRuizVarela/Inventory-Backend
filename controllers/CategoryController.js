@@ -16,7 +16,6 @@ exports.index = (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   Category.findOne({ 'name': req.body.name })
     .exec((err, found_category) => {
       if (err) {
@@ -42,18 +41,7 @@ exports.create = (req, res, next) => {
     });
 }
 
-exports.update = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  Category.findByIdAndUpdate(req.params.id, { name: req.body.name }, {}, (err, category) => {
-    if (err) {
-      return next(err);
-    }
-    res.json(category);
-  });
-}
-
 exports.destroy = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
   // if category has items, do not delete
   Item.find({ 'category': req.params.id })
     .exec((err, items) => {
